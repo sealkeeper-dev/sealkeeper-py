@@ -1,0 +1,42 @@
+{
+  "status": 200,
+  "headers": {
+    "content-type": "application/json"
+  },
+  "body": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "sealkeeper/test-agent (Trust Score 0, claimed). Its current SEAL is in the answer, verify it with the keys at https://api.sealkeeper.run/.well-known/seal.json."
+        },
+        {
+          "type": "text",
+          "text": "{\"skill\":\"get-trust\",\"status\":\"shown\",\"agent\":{\"id\":\"j2KKg1Ij_Wm_9MP_WAd0jpcdwboD6B1NDGcev5WQV9M\",\"handle\":\"sealkeeper/test-agent\",\"name\":\"test-agent\",\"domain\":null,\"pageUrl\":\"https://sealkeeper.run/agents/sealkeeper/test-agent\",\"cardUrl\":\"https://api.sealkeeper.run/v1/agents/j2KKg1Ij_Wm_9MP_WAd0jpcdwboD6B1NDGcev5WQV9M/card\",\"sealUrl\":\"https://api.sealkeeper.run/v1/agents/j2KKg1Ij_Wm_9MP_WAd0jpcdwboD6B1NDGcev5WQV9M/seal\",\"trust\":0,\"claimState\":\"claimed\",\"subjectKind\":\"agent\",\"level\":\"none\",\"held\":false,\"verifiedTasks\":0},\"seal\":\"eyJhbGciOiJFZERTQSIsImtpZCI6ImsxIn0.eyJpc3MiOiJzZWFsa2VlcGVyLnJ1biIsInN1YiI6ImoyS0tnMUlqX1dtXzlNUF9XQWQwanBjZHdib0Q2QjFOREdjZXY1V1FWOU0iLCJ2ZXIiOjksImlhdCI6MTc5MzU1NDU1NiwiZXhwIjoxNzkzNjQwOTU2LCJhZ2VudF92ZXJzaW9uIjoiMC4xLjAiLCJzdWJqZWN0Ijp7ImtpbmQiOiJhZ2VudCJ9LCJsZXZlbCI6Im5vbmUiLCJzY29yZXMiOnsicmVsaWFiaWxpdHkiOm51bGwsInByb3ZlbmFuY2UiOm51bGx9LCJjb3VudHMiOnsiZXZlbnRzIjowLCJoaXN0b3J5X2RheXMiOjE5LCJ2ZXJpZmllZF90YXNrcyI6MCwic2VlZF90YXNrcyI6MCwic2VydmVyX2NoZWNrZWRfdGFza3MiOjAsImNvbmZpcm1lZF90YXNrcyI6MCwiZGlzdGluY3Rfb3BlcmF0b3JzIjowLCJzYWZldHlfaW5jaWRlbnRzXzkwZCI6MCwicG9zdGVkX3Rhc2tzIjowLCJwb3N0ZWRfZGlzdGluY3Rfb3BlcmF0b3JzIjowLCJwb3N0ZWRfY29uZmlybWVkX3Rhc2tzIjowfSwiY291bnRlZCI6eyJ2ZXJpZmllZF90YXNrcyI6MCwic2VlZF90YXNrcyI6MCwic2VydmVyX2NoZWNrZWRfdGFza3MiOjAsImNvbmZpcm1lZF90YXNrcyI6MCwicG9zdGVkX3Rhc2tzIjowLCJwb3N0ZWRfY29uZmlybWVkX3Rhc2tzIjowfSwiZmluZ2VycHJpbnQiOm51bGwsInJvdXRpbmVfZmluZ2VycHJpbnQiOm51bGwsInN0YXRlIjoibWF0Y2hlcyIsInRydXN0IjowLCJ0b3BfY2F0ZWdvcmllcyI6W10sIm9wZXJhdG9yIjp7InZlcmlmaWVkIjpmYWxzZX0sImlkZW50aXR5IjpbXSwibGFzdF9hY3RpdmUiOm51bGwsImRvcm1hbnRfZGF5cyI6bnVsbH0.laeMyMFuDKqXRqaMHdR5ehw0mcHRRsqHbayxfDxxFgMMD1R8YruBiqPskc-iOs73NFfp2fNB5KVXp9zl0s9ICg\"}"
+        }
+      ],
+      "structuredContent": {
+        "skill": "get-trust",
+        "status": "shown",
+        "agent": {
+          "id": "j2KKg1Ij_Wm_9MP_WAd0jpcdwboD6B1NDGcev5WQV9M",
+          "handle": "sealkeeper/test-agent",
+          "name": "test-agent",
+          "domain": null,
+          "pageUrl": "https://sealkeeper.run/agents/sealkeeper/test-agent",
+          "cardUrl": "https://api.sealkeeper.run/v1/agents/j2KKg1Ij_Wm_9MP_WAd0jpcdwboD6B1NDGcev5WQV9M/card",
+          "sealUrl": "https://api.sealkeeper.run/v1/agents/j2KKg1Ij_Wm_9MP_WAd0jpcdwboD6B1NDGcev5WQV9M/seal",
+          "trust": 0,
+          "claimState": "claimed",
+          "subjectKind": "agent",
+          "level": "none",
+          "held": false,
+          "verifiedTasks": 0
+        },
+        "seal": "eyJhbGciOiJFZERTQSIsImtpZCI6ImsxIn0.eyJpc3MiOiJzZWFsa2VlcGVyLnJ1biIsInN1YiI6ImoyS0tnMUlqX1dtXzlNUF9XQWQwanBjZHdib0Q2QjFOREdjZXY1V1FWOU0iLCJ2ZXIiOjksImlhdCI6MTc5MzU1NDU1NiwiZXhwIjoxNzkzNjQwOTU2LCJhZ2VudF92ZXJzaW9uIjoiMC4xLjAiLCJzdWJqZWN0Ijp7ImtpbmQiOiJhZ2VudCJ9LCJsZXZlbCI6Im5vbmUiLCJzY29yZXMiOnsicmVsaWFiaWxpdHkiOm51bGwsInByb3ZlbmFuY2UiOm51bGx9LCJjb3VudHMiOnsiZXZlbnRzIjowLCJoaXN0b3J5X2RheXMiOjE5LCJ2ZXJpZmllZF90YXNrcyI6MCwic2VlZF90YXNrcyI6MCwic2VydmVyX2NoZWNrZWRfdGFza3MiOjAsImNvbmZpcm1lZF90YXNrcyI6MCwiZGlzdGluY3Rfb3BlcmF0b3JzIjowLCJzYWZldHlfaW5jaWRlbnRzXzkwZCI6MCwicG9zdGVkX3Rhc2tzIjowLCJwb3N0ZWRfZGlzdGluY3Rfb3BlcmF0b3JzIjowLCJwb3N0ZWRfY29uZmlybWVkX3Rhc2tzIjowfSwiY291bnRlZCI6eyJ2ZXJpZmllZF90YXNrcyI6MCwic2VlZF90YXNrcyI6MCwic2VydmVyX2NoZWNrZWRfdGFza3MiOjAsImNvbmZpcm1lZF90YXNrcyI6MCwicG9zdGVkX3Rhc2tzIjowLCJwb3N0ZWRfY29uZmlybWVkX3Rhc2tzIjowfSwiZmluZ2VycHJpbnQiOm51bGwsInJvdXRpbmVfZmluZ2VycHJpbnQiOm51bGwsInN0YXRlIjoibWF0Y2hlcyIsInRydXN0IjowLCJ0b3BfY2F0ZWdvcmllcyI6W10sIm9wZXJhdG9yIjp7InZlcmlmaWVkIjpmYWxzZX0sImlkZW50aXR5IjpbXSwibGFzdF9hY3RpdmUiOm51bGwsImRvcm1hbnRfZGF5cyI6bnVsbH0.laeMyMFuDKqXRqaMHdR5ehw0mcHRRsqHbayxfDxxFgMMD1R8YruBiqPskc-iOs73NFfp2fNB5KVXp9zl0s9ICg"
+      }
+    }
+  }
+}

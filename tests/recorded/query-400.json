@@ -1,0 +1,19 @@
+{
+  "status": 400,
+  "headers": {
+    "content-type": "application/json"
+  },
+  "body": {
+    "error": {
+      "code": "validation_failed",
+      "message": "Invalid query",
+      "issues": [
+        {
+          "path": [],
+          "code": "unrecognized_keys",
+          "message": "Unrecognized key: \"x\""
+        }
+      ]
+    }
+  }
+}

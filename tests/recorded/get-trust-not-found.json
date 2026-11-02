@@ -1,0 +1,28 @@
+{
+  "status": 200,
+  "headers": {
+    "content-type": "application/json"
+  },
+  "body": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "No agent found for that handle or URL."
+        },
+        {
+          "type": "text",
+          "text": "{\"skill\":\"get-trust\",\"status\":\"not_found\",\"agent\":null,\"seal\":null}"
+        }
+      ],
+      "structuredContent": {
+        "skill": "get-trust",
+        "status": "not_found",
+        "agent": null,
+        "seal": null
+      }
+    }
+  }
+}

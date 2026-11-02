@@ -1,0 +1,55 @@
+[project]
+name = "sealkeeper"
+dynamic = ["version"]
+description = "Look up and verify SealKeeper SEALs, and gate agent and service calls on them."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "The SealKeeper Authors" }]
+requires-python = ">=3.10"
+dependencies = ["httpx>=0.27,<1", "cryptography>=42"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.14",
+  "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://sealkeeper.run"
+"SEAL Standard" = "https://sealkeeper.run/seal/standard"
+Repository = "https://github.com/sealkeeper-dev/sealkeeper-py"
+Issues = "https://github.com/sealkeeper-dev/sealkeeper-py/issues"
+
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "src/sealkeeper/_version.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/sealkeeper"]
+
+[tool.hatch.build.targets.sdist]
+only-include = ["src/sealkeeper", "tests", "README.md", "LICENSE"]
+
+[dependency-groups]
+dev = ["pytest>=8.3", "ruff>=0.14"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 88
+include = ["*.py"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["sealkeeper", "support"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Async tests run on anyio. pytest-asyncio stays off where it is installed.
+addopts = "--strict-markers -p no:asyncio"
+markers = ["live: calls production, runs only with SEALKEEPER_LIVE=1"]

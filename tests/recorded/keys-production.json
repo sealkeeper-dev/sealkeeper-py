@@ -1,0 +1,18 @@
+{
+  "status": 200,
+  "headers": {
+    "content-type": "application/json",
+    "cache-control": "public, max-age=300"
+  },
+  "body": {
+    "keys": [
+      {
+        "kid": "k1",
+        "kty": "OKP",
+        "crv": "Ed25519",
+        "alg": "EdDSA",
+        "x": "vJ-66EiCVZIlhqkfylF7b6ToMX_3RjEfLzhpmoeyR4Y"
+      }
+    ]
+  }
+}

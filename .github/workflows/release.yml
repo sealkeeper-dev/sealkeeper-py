@@ -1,0 +1,97 @@
+# Publishes the package to PyPI when a GitHub release is published on this
+# repository.
+#
+# There is no PyPI token. PyPI accepts the upload through a short lived
+# OIDC token from this workflow (Trusted Publishing). Its trusted publisher
+# is this repository, this file and the pypi environment.
+#
+# Three jobs, so no build time package runs where that token can be minted.
+# check lints and tests. build only builds the sdist and the wheel, and
+# uploads them. Both read contents only. publish alone holds id-token write.
+# It checks out nothing. It installs uv, and the attest action runs from
+# its own lockfile to sign a PEP 740 attestation for each file build made.
+# Then it uploads the files with their attestations. The pypi environment
+# holds it for a reviewer.
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: 0.13.3
+          enable-cache: false
+      - name: Release tag matches _version.py
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          version=$(sed -n 's/^__version__ = "\(.*\)"$/\1/p' src/sealkeeper/_version.py)
+          if [ "$TAG" != "v$version" ]; then
+            echo "refusing. Release tag $TAG is not v$version from _version.py." >&2
+            exit 1
+          fi
+      - run: uv run ruff check
+      - run: uv run ruff format --check
+      - run: uv run --python 3.10 pytest
+      - run: uv run --python 3.14 pytest
+
+  build:
+    needs: check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: 0.13.3
+          enable-cache: false
+      - run: uv build --out-dir "$RUNNER_TEMP/dist"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: dist
+          path: ${{ runner.temp }}/dist/
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: 0.13.3
+          enable-cache: false
+          ignore-empty-workdir: true
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: dist
+          path: ${{ runner.temp }}/dist
+      - name: Attest the files
+        uses: astral-sh/attest-action@f589a42a7efb6fe400b4f400de60b4bc90390027 # v0.0.6
+        with:
+          paths: ${{ runner.temp }}/dist/*
+      - name: Publish to PyPI
+        run: uv publish --trusted-publishing always "$RUNNER_TEMP"/dist/*

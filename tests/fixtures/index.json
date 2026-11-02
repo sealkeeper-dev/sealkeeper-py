@@ -1,0 +1,786 @@
+{
+  "about": "SealKeeper SEAL reader fixtures. Each case names its file, the command that checks it and the answer at each clock. A SEAL states the POST /v1/seal/verify answer against keys.json, a handshake the handshake field of that answer, a read the recorded answer. README.md says how to run them.",
+  "clocks": {
+    "pinned": "2026-10-01T12:00:00.000Z",
+    "pinnedSeconds": 1790856000,
+    "nowFrom": "2026-10-02T12:00:00.000Z"
+  },
+  "keys": "keys.json",
+  "agent": "agent.json",
+  "sealReference": {
+    "file": "seals/v1-valid.txt",
+    "reference": "sealkeeper:seal:1:subject:35886f79f3a6e302e52f05e7fe10c3e9253605498052dc63c29ff0a6e5d821be:https://api.sealkeeper.run/v1/agents/gTl3Dqh9F19Wo1Rmw0x-zMuNipG07jeiXfYPW4_Js5Q/seal"
+  },
+  "cases": [
+    {
+      "name": "v1-valid",
+      "file": "seals/v1-valid.txt",
+      "kind": "seal",
+      "description": "A version 1 SEAL issued an hour before FIXTURE_NOW. Valid then, and lapsed since.",
+      "commands": {
+        "pinned": "npx sealkeeper@latest seal verify - --keys fixtures/keys.json --at 2026-10-01T12:00:00Z < fixtures/seals/v1-valid.txt",
+        "now": "npx sealkeeper@latest seal verify - --keys fixtures/keys.json < fixtures/seals/v1-valid.txt"
+      },
+      "exit": {
+        "pinned": 0,
+        "now": 1
+      },
+      "expected": {
+        "pinned": {
+          "valid": true,
+          "payload": {
+            "iss": "sealkeeper.run",
+            "sub": "gTl3Dqh9F19Wo1Rmw0x-zMuNipG07jeiXfYPW4_Js5Q",
+            "ver": 1,
+            "iat": 1790852400,
+            "exp": 1790938800,
+            "agent_version": "1.0.0",
+            "version": "1.0.0",
+            "level": "bronze",
+            "scores": {
+              "reliability": 0.9
+            },
+            "counts": {
+              "events": 40,
+              "history_days": 4,
+              "verified_tasks": 26,
+              "seed_tasks": 25,
+              "server_checked_tasks": 1,
+              "confirmed_tasks": 0,
+              "distinct_operators": 1,
+              "safety_incidents_90d": 0
+            },
+            "operator": {
+              "verified": false
+            },
+            "identity": [],
+            "last_active": 1790852400,
+            "dormant_days": 0
+          },
+          "expiresIn": 82800,
+          "at": "2026-10-01T12:00:00.000Z",
+          "lapsed": true
+        },
+        "now": {
+          "valid": false,
+          "reason": "expired"
+        }
+      }
+    },
+    {
+      "name": "v1-expired",
+      "file": "seals/v1-expired.txt",
+      "kind": "seal",
+      "description": "A version 1 SEAL that expired an hour before FIXTURE_NOW. Expired at either clock.",
+      "commands": {
+        "pinned": "npx sealkeeper@latest seal verify - --keys fixtures/keys.json --at 2026-10-01T12:00:00Z < fixtures/seals/v1-expired.txt",
+        "now": "npx sealkeeper@latest seal verify - --keys fixtures/keys.json < fixtures/seals/v1-expired.txt"
+      },
+      "exit": {
+        "pinned": 1,
+        "now": 1
+      },
+      "expected": {
+        "pinned": {
+          "valid": false,
+          "reason": "expired"
+        },
+        "now": {
+          "valid": false,
+          "reason": "expired"
+        }
+      }
+    },
+    {
+      "name": "v1-bad-signature",
+      "file": "seals/v1-bad-signature.txt",
+      "kind": "seal",
+      "description": "v1-valid with one character of the signature changed. The signature is checked before the time, so it is bad_signature at either clock.",
+      "commands": {
+        "pinned": "npx sealkeeper@latest seal verify - --keys fixtures/keys.json --at 2026-10-01T12:00:00Z < fixtures/seals/v1-bad-signature.txt",
+        "now": "npx sealkeeper@latest seal verify - --keys fixtures/keys.json < fixtures/seals/v1-bad-signature.txt"
+      },
+      "exit": {
+        "pinned": 1,
+        "now": 1
+      },
+      "expected": {
+        "pinned": {
+          "valid": false,
+          "reason": "bad_signature"
+        },
+        "now": {
+          "valid": false,
+          "reason": "bad_signature"
+        }
+      }
+    },
+    {
+      "name": "v1-unknown-kid",
+      "file": "seals/v1-unknown-kid.txt",
+      "kind": "seal",
+      "description": "A version 1 SEAL signed by another test key under kid fixture-9, which keys.json does not list.",
+      "commands": {
+        "pinned": "npx sealkeeper@latest seal verify - --keys fixtures/keys.json --at 2026-10-01T12:00:00Z < fixtures/seals/v1-unknown-kid.txt",
+        "now": "npx sealkeeper@latest seal verify - --keys fixtures/keys.json < fixtures/seals/v1-unknown-kid.txt"
+      },
+      "exit": {
+        "pinned": 1,
+        "now": 1
+      },
+      "expected": {
+        "pinned": {
+          "valid": false,
+          "reason": "unknown_kid"
+        },
+        "now": {
+          "valid": false,
+          "reason": "unknown_kid"
+        }
+      }
+    },
+    {
+      "name": "v4-valid",
+      "file": "seals/v4-valid.txt",
+      "kind": "seal",
+      "description": "A version 4 SEAL with a fingerprint, a Trust Score and top categories, issued an hour before FIXTURE_NOW.",
+      "commands": {
+        "pinned": "npx sealkeeper@latest seal verify - --keys fixtures/keys.json --at 2026-10-01T12:00:00Z < fixtures/seals/v4-valid.txt",
+        "now": "npx sealkeeper@latest seal verify - --keys fixtures/keys.json < fixtures/seals/v4-valid.txt"
+      },
+      "exit": {
+        "pinned": 0,
+        "now": 1
+      },
+      "expected": {
+        "pinned": {
+          "valid": true,
+          "payload": {
+            "iss": "sealkeeper.run",
+            "sub": "gTl3Dqh9F19Wo1Rmw0x-zMuNipG07jeiXfYPW4_Js5Q",
+            "ver": 4,
+            "iat": 1790852400,
+            "exp": 1790938800,
+            "agent_version": "1.0.0",
+            "level": "bronze",
+            "scores": {
+              "reliability": 0.9
+            },
+            "counts": {
+              "events": 40,
+              "history_days": 4,
+              "verified_tasks": 26,
+              "seed_tasks": 25,
+              "server_checked_tasks": 1,
+              "confirmed_tasks": 0,
+              "distinct_operators": 1,
+              "safety_incidents_90d": 0,
+              "posted_tasks": 4,
+              "posted_distinct_operators": 2,
+              "posted_confirmed_tasks": 1
+            },
+            "counted": {
+              "verified_tasks": 17,
+              "seed_tasks": 17,
+              "server_checked_tasks": 0,
+              "confirmed_tasks": 0,
+              "posted_tasks": 3,
+              "posted_confirmed_tasks": 1
+            },
+            "fingerprint": {
+              "hash": "1JsN0Fu6rOWEq-ewtZ_1IAKMxj26PW8kEU2-Aa3OVXc",
+              "at": 1790848800
+            },
+            "state": "matches",
+            "trust": 412,
+            "top_categories": [
+              {
+                "category": "code",
+                "score": 230
+              },
+              {
+                "category": "data",
+                "score": 90
+              },
+              {
+                "category": "math",
+                "score": 90
+              }
+            ],
+            "operator": {
+              "verified": false
+            },
+            "identity": [],
+            "last_active": 1790852400,
+            "dormant_days": 0
+          },
+          "expiresIn": 82800,
+          "at": "2026-10-01T12:00:00.000Z",
+          "lapsed": true
+        },
+        "now": {
+          "valid": false,
+          "reason": "expired"
+        }
+      }
+    },
+    {
+      "name": "v6-valid",
+      "file": "seals/v6-valid.txt",
+      "kind": "seal",
+      "description": "A version 6 SEAL, v4-valid plus the routine fingerprint beside the session one, issued an hour before FIXTURE_NOW.",
+      "commands": {
+        "pinned": "npx sealkeeper@latest seal verify - --keys fixtures/keys.json --at 2026-10-01T12:00:00Z < fixtures/seals/v6-valid.txt",
+        "now": "npx sealkeeper@latest seal verify - --keys fixtures/keys.json < fixtures/seals/v6-valid.txt"
+      },
+      "exit": {
+        "pinned": 0,
+        "now": 1
+      },
+      "expected": {
+        "pinned": {
+          "valid": true,
+          "payload": {
+            "iss": "sealkeeper.run",
+            "sub": "gTl3Dqh9F19Wo1Rmw0x-zMuNipG07jeiXfYPW4_Js5Q",
+            "ver": 6,
+            "iat": 1790852400,
+            "exp": 1790938800,
+            "agent_version": "1.0.0",
+            "level": "bronze",
+            "scores": {
+              "reliability": 0.9
+            },
+            "counts": {
+              "events": 40,
+              "history_days": 4,
+              "verified_tasks": 26,
+              "seed_tasks": 25,
+              "server_checked_tasks": 1,
+              "confirmed_tasks": 0,
+              "distinct_operators": 1,
+              "safety_incidents_90d": 0,
+              "posted_tasks": 4,
+              "posted_distinct_operators": 2,
+              "posted_confirmed_tasks": 1
+            },
+            "counted": {
+              "verified_tasks": 17,
+              "seed_tasks": 17,
+              "server_checked_tasks": 0,
+              "confirmed_tasks": 0,
+              "posted_tasks": 3,
+              "posted_confirmed_tasks": 1
+            },
+            "fingerprint": {
+              "hash": "1JsN0Fu6rOWEq-ewtZ_1IAKMxj26PW8kEU2-Aa3OVXc",
+              "at": 1790848800
+            },
+            "routine_fingerprint": {
+              "hash": "JniAQWN9vaWD3U-BsZ33ReH5qhTPHc9WmG7d5Hl9tB0",
+              "at": 1790845200
+            },
+            "state": "matches",
+            "trust": 412,
+            "top_categories": [
+              {
+                "category": "code",
+                "score": 230
+              },
+              {
+                "category": "data",
+                "score": 90
+              },
+              {
+                "category": "math",
+                "score": 90
+              }
+            ],
+            "operator": {
+              "verified": false
+            },
+            "identity": [],
+            "last_active": 1790852400,
+            "dormant_days": 0
+          },
+          "expiresIn": 82800,
+          "at": "2026-10-01T12:00:00.000Z",
+          "lapsed": true
+        },
+        "now": {
+          "valid": false,
+          "reason": "expired"
+        }
+      }
+    },
+    {
+      "name": "v7-valid",
+      "file": "seals/v7-valid.txt",
+      "kind": "seal",
+      "description": "A version 7 SEAL of an agent, v6-valid plus subject.kind agent and nothing else, issued an hour before FIXTURE_NOW.",
+      "commands": {
+        "pinned": "npx sealkeeper@latest seal verify - --keys fixtures/keys.json --at 2026-10-01T12:00:00Z < fixtures/seals/v7-valid.txt",
+        "now": "npx sealkeeper@latest seal verify - --keys fixtures/keys.json < fixtures/seals/v7-valid.txt"
+      },
+      "exit": {
+        "pinned": 0,
+        "now": 1
+      },
+      "expected": {
+        "pinned": {
+          "valid": true,
+          "payload": {
+            "iss": "sealkeeper.run",
+            "sub": "gTl3Dqh9F19Wo1Rmw0x-zMuNipG07jeiXfYPW4_Js5Q",
+            "ver": 7,
+            "iat": 1790852400,
+            "exp": 1790938800,
+            "agent_version": "1.0.0",
+            "subject": {
+              "kind": "agent"
+            },
+            "level": "bronze",
+            "scores": {
+              "reliability": 0.9
+            },
+            "counts": {
+              "events": 40,
+              "history_days": 4,
+              "verified_tasks": 26,
+              "seed_tasks": 25,
+              "server_checked_tasks": 1,
+              "confirmed_tasks": 0,
+              "distinct_operators": 1,
+              "safety_incidents_90d": 0,
+              "posted_tasks": 4,
+              "posted_distinct_operators": 2,
+              "posted_confirmed_tasks": 1
+            },
+            "counted": {
+              "verified_tasks": 17,
+              "seed_tasks": 17,
+              "server_checked_tasks": 0,
+              "confirmed_tasks": 0,
+              "posted_tasks": 3,
+              "posted_confirmed_tasks": 1
+            },
+            "fingerprint": {
+              "hash": "1JsN0Fu6rOWEq-ewtZ_1IAKMxj26PW8kEU2-Aa3OVXc",
+              "at": 1790848800
+            },
+            "routine_fingerprint": {
+              "hash": "JniAQWN9vaWD3U-BsZ33ReH5qhTPHc9WmG7d5Hl9tB0",
+              "at": 1790845200
+            },
+            "state": "matches",
+            "trust": 412,
+            "top_categories": [
+              {
+                "category": "code",
+                "score": 230
+              },
+              {
+                "category": "data",
+                "score": 90
+              },
+              {
+                "category": "math",
+                "score": 90
+              }
+            ],
+            "operator": {
+              "verified": false
+            },
+            "identity": [],
+            "last_active": 1790852400,
+            "dormant_days": 0
+          },
+          "expiresIn": 82800,
+          "at": "2026-10-01T12:00:00.000Z",
+          "lapsed": true
+        },
+        "now": {
+          "valid": false,
+          "reason": "expired"
+        }
+      }
+    },
+    {
+      "name": "v7-listed-x402-valid",
+      "file": "seals/v7-listed-x402-valid.txt",
+      "kind": "seal",
+      "description": "A version 7 SEAL of a listed agent that also answers x402, subject.kind agent, its owner unverified, endpoint_check and beside it x402_check of unpaid calls, issued an hour before FIXTURE_NOW.",
+      "commands": {
+        "pinned": "npx sealkeeper@latest seal verify - --keys fixtures/keys.json --at 2026-10-01T12:00:00Z < fixtures/seals/v7-listed-x402-valid.txt",
+        "now": "npx sealkeeper@latest seal verify - --keys fixtures/keys.json < fixtures/seals/v7-listed-x402-valid.txt"
+      },
+      "exit": {
+        "pinned": 0,
+        "now": 1
+      },
+      "expected": {
+        "pinned": {
+          "valid": true,
+          "payload": {
+            "iss": "sealkeeper.run",
+            "sub": "gTl3Dqh9F19Wo1Rmw0x-zMuNipG07jeiXfYPW4_Js5Q",
+            "ver": 7,
+            "iat": 1790852400,
+            "exp": 1790938800,
+            "agent_version": "1.0.0",
+            "subject": {
+              "kind": "agent"
+            },
+            "level": "bronze",
+            "scores": {
+              "reliability": 0.9
+            },
+            "counts": {
+              "events": 40,
+              "history_days": 4,
+              "verified_tasks": 26,
+              "seed_tasks": 25,
+              "server_checked_tasks": 1,
+              "confirmed_tasks": 0,
+              "distinct_operators": 1,
+              "safety_incidents_90d": 0,
+              "posted_tasks": 4,
+              "posted_distinct_operators": 2,
+              "posted_confirmed_tasks": 1
+            },
+            "counted": {
+              "verified_tasks": 17,
+              "seed_tasks": 17,
+              "server_checked_tasks": 0,
+              "confirmed_tasks": 0,
+              "posted_tasks": 3,
+              "posted_confirmed_tasks": 1
+            },
+            "fingerprint": null,
+            "routine_fingerprint": null,
+            "state": "matches",
+            "trust": 412,
+            "top_categories": [
+              {
+                "category": "code",
+                "score": 230
+              },
+              {
+                "category": "data",
+                "score": 90
+              },
+              {
+                "category": "math",
+                "score": 90
+              }
+            ],
+            "operator": {
+              "verified": false
+            },
+            "identity": [],
+            "last_active": 1790852400,
+            "dormant_days": 0,
+            "owner": {
+              "status": "unverified"
+            },
+            "listing": {
+              "handle": "example.com/helper",
+              "domain_key": "example.com",
+              "card_url": "https://agents.example.com/.well-known/agent-card.json"
+            },
+            "evidence": [
+              {
+                "type": "endpoint_check",
+                "window_start": "2026-09-17T11:00:00.000Z",
+                "window_end": "2026-10-01T11:00:00.000Z",
+                "task_total": 12,
+                "task_ok": 11,
+                "uptime_pct": 99.5,
+                "p95_ms": 820,
+                "last_checked_at": "2026-10-01T10:00:00.000Z"
+              },
+              {
+                "type": "x402_check",
+                "window_start": "2026-09-24T11:00:00.000Z",
+                "window_end": "2026-10-01T11:00:00.000Z",
+                "unpaid_only": true,
+                "endpoints": 3,
+                "checks_total": 56,
+                "challenge_valid": 55,
+                "uptime_pct": 100,
+                "p95_ms": 410,
+                "wallet": {
+                  "proven": true,
+                  "changes_30d": 0,
+                  "last_change_at": null,
+                  "last_change_confirmed": null
+                },
+                "price": {
+                  "as_declared": 0,
+                  "above_declared": 0,
+                  "below_declared": 0,
+                  "undeclared": 3,
+                  "changes_30d": 0
+                },
+                "last_checked_at": "2026-10-01T10:00:00.000Z"
+              }
+            ]
+          },
+          "expiresIn": 82800,
+          "at": "2026-10-01T12:00:00.000Z",
+          "lapsed": true
+        },
+        "now": {
+          "valid": false,
+          "reason": "expired"
+        }
+      }
+    },
+    {
+      "name": "v7-service-valid",
+      "file": "seals/v7-service-valid.txt",
+      "kind": "seal",
+      "description": "A version 7 SEAL of a service, subject.kind service with interfaces x402 and paid, its owner unverified and x402_check evidence of unpaid calls in place of endpoint_check, issued an hour before FIXTURE_NOW.",
+      "commands": {
+        "pinned": "npx sealkeeper@latest seal verify - --keys fixtures/keys.json --at 2026-10-01T12:00:00Z < fixtures/seals/v7-service-valid.txt",
+        "now": "npx sealkeeper@latest seal verify - --keys fixtures/keys.json < fixtures/seals/v7-service-valid.txt"
+      },
+      "exit": {
+        "pinned": 0,
+        "now": 1
+      },
+      "expected": {
+        "pinned": {
+          "valid": true,
+          "payload": {
+            "iss": "sealkeeper.run",
+            "sub": "gTl3Dqh9F19Wo1Rmw0x-zMuNipG07jeiXfYPW4_Js5Q",
+            "ver": 7,
+            "iat": 1790852400,
+            "exp": 1790938800,
+            "agent_version": "1.0.0",
+            "subject": {
+              "kind": "service",
+              "interfaces": [
+                "x402"
+              ],
+              "paid": true
+            },
+            "level": "bronze",
+            "scores": {},
+            "counts": {
+              "events": 0,
+              "history_days": 0,
+              "verified_tasks": 0,
+              "seed_tasks": 0,
+              "server_checked_tasks": 0,
+              "confirmed_tasks": 0,
+              "distinct_operators": 0,
+              "safety_incidents_90d": 0,
+              "posted_tasks": 0,
+              "posted_distinct_operators": 0,
+              "posted_confirmed_tasks": 0
+            },
+            "counted": {
+              "verified_tasks": 0,
+              "seed_tasks": 0,
+              "server_checked_tasks": 0,
+              "confirmed_tasks": 0,
+              "posted_tasks": 0,
+              "posted_confirmed_tasks": 0
+            },
+            "fingerprint": null,
+            "routine_fingerprint": null,
+            "state": "matches",
+            "trust": 0,
+            "top_categories": [],
+            "operator": {
+              "verified": false
+            },
+            "identity": [],
+            "last_active": 1790852400,
+            "dormant_days": 0,
+            "owner": {
+              "status": "unverified"
+            },
+            "listing": {
+              "handle": "example.com/pay",
+              "domain_key": "example.com",
+              "card_url": "https://pay.example.com/.well-known/x402"
+            },
+            "evidence": [
+              {
+                "type": "x402_check",
+                "window_start": "2026-09-24T11:00:00.000Z",
+                "window_end": "2026-10-01T11:00:00.000Z",
+                "unpaid_only": true,
+                "endpoints": 3,
+                "checks_total": 56,
+                "challenge_valid": 55,
+                "uptime_pct": 100,
+                "p95_ms": 410,
+                "wallet": {
+                  "proven": true,
+                  "changes_30d": 0,
+                  "last_change_at": null,
+                  "last_change_confirmed": null
+                },
+                "price": {
+                  "as_declared": 0,
+                  "above_declared": 0,
+                  "below_declared": 0,
+                  "undeclared": 3,
+                  "changes_30d": 0
+                },
+                "last_checked_at": "2026-10-01T10:00:00.000Z"
+              }
+            ]
+          },
+          "expiresIn": 82800,
+          "at": "2026-10-01T12:00:00.000Z",
+          "lapsed": true
+        },
+        "now": {
+          "valid": false,
+          "reason": "expired"
+        }
+      }
+    },
+    {
+      "name": "handshake",
+      "file": "handshake/handshake.txt",
+      "kind": "handshake",
+      "description": "A handshake the fixture agent signed at FIXTURE_NOW over its session fingerprint, with nonce fixture-nonce and verifier fixture-verifier, checked beside v4-valid.",
+      "seal": "seals/v4-valid.txt",
+      "nonce": "fixture-nonce",
+      "verifier": "fixture-verifier",
+      "commands": {
+        "now": "npx sealkeeper@latest seal verify - --keys fixtures/keys.json --at 2026-10-01T12:00:00Z --handshake \"$(cat fixtures/handshake/handshake.txt)\" --nonce fixture-nonce --for fixture-verifier < fixtures/seals/v4-valid.txt"
+      },
+      "exit": {
+        "now": 1
+      },
+      "expected": {
+        "pinned": {
+          "valid": true,
+          "result": "matches",
+          "against": "seal",
+          "setup": "session",
+          "proof": "verifier"
+        },
+        "now": {
+          "valid": false,
+          "reason": "stale"
+        }
+      }
+    },
+    {
+      "name": "handshake-routine",
+      "file": "handshake/handshake-routine.txt",
+      "kind": "handshake",
+      "description": "A handshake the fixture agent signed at FIXTURE_NOW over its routine fingerprint, with nonce fixture-nonce and verifier fixture-verifier, checked beside v6-valid, whose routine_fingerprint it matches.",
+      "seal": "seals/v6-valid.txt",
+      "nonce": "fixture-nonce",
+      "verifier": "fixture-verifier",
+      "commands": {
+        "now": "npx sealkeeper@latest seal verify - --keys fixtures/keys.json --at 2026-10-01T12:00:00Z --handshake \"$(cat fixtures/handshake/handshake-routine.txt)\" --nonce fixture-nonce --for fixture-verifier < fixtures/seals/v6-valid.txt"
+      },
+      "exit": {
+        "now": 1
+      },
+      "expected": {
+        "pinned": {
+          "valid": true,
+          "result": "matches",
+          "against": "seal",
+          "setup": "routine",
+          "proof": "verifier"
+        },
+        "now": {
+          "valid": false,
+          "reason": "stale"
+        }
+      }
+    },
+    {
+      "name": "not_found",
+      "file": "reads/not_found.json",
+      "kind": "read",
+      "description": "No agent has this id.",
+      "request": "GET /v1/agents/7UkoxijRwsbq6QM4kFmVYSlZJzpcY_k2NsFGFKyHN9E/seal",
+      "expected": {
+        "file": "reads/not_found.json"
+      }
+    },
+    {
+      "name": "withheld",
+      "file": "reads/withheld.json",
+      "kind": "read",
+      "description": "SealKeeper holds the agent for cause, reason the class only.",
+      "request": "GET /v1/agents/gTl3Dqh9F19Wo1Rmw0x-zMuNipG07jeiXfYPW4_Js5Q/seal",
+      "expected": {
+        "file": "reads/withheld.json"
+      }
+    },
+    {
+      "name": "no_recent_check",
+      "file": "reads/no_recent_check.json",
+      "kind": "read",
+      "description": "A listed agent with no recent OK task check. It is no hold.",
+      "request": "GET /v1/agents/gTl3Dqh9F19Wo1Rmw0x-zMuNipG07jeiXfYPW4_Js5Q/seal",
+      "expected": {
+        "file": "reads/no_recent_check.json"
+      }
+    },
+    {
+      "name": "checking",
+      "file": "reads/checking.json",
+      "kind": "read",
+      "description": "A listed agent SealKeeper is still checking, or one no longer listed.",
+      "request": "GET /v1/agents/gTl3Dqh9F19Wo1Rmw0x-zMuNipG07jeiXfYPW4_Js5Q/seal",
+      "expected": {
+        "file": "reads/checking.json"
+      }
+    },
+    {
+      "name": "no_seal",
+      "file": "reads/no_seal.json",
+      "kind": "read",
+      "description": "The SEAL is withheld because the agent has been dormant.",
+      "request": "GET /v1/agents/gTl3Dqh9F19Wo1Rmw0x-zMuNipG07jeiXfYPW4_Js5Q/seal",
+      "expected": {
+        "file": "reads/no_seal.json"
+      }
+    },
+    {
+      "name": "renamed",
+      "file": "reads/renamed.json",
+      "kind": "read",
+      "description": "The handle route only. The handle was given up, and the agent is now at handle.",
+      "request": "GET /v1/agents/alice/old-fixture/seal",
+      "expected": {
+        "file": "reads/renamed.json"
+      }
+    },
+    {
+      "name": "validation_failed",
+      "file": "reads/validation_failed.json",
+      "kind": "read",
+      "description": "A malformed agent id. Fix the request rather than retry it.",
+      "request": "GET /v1/agents/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB/seal",
+      "expected": {
+        "file": "reads/validation_failed.json"
+      }
+    },
+    {
+      "name": "rate_limited",
+      "file": "reads/rate_limited.json",
+      "kind": "read",
+      "description": "Over the public read limit. Retry-After is the whole seconds to wait, and its value varies.",
+      "request": "GET /v1/agents/gTl3Dqh9F19Wo1Rmw0x-zMuNipG07jeiXfYPW4_Js5Q/seal",
+      "expected": {
+        "file": "reads/rate_limited.json"
+      }
+    }
+  ]
+}
