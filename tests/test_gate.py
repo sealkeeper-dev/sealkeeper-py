@@ -93,6 +93,7 @@ async def test_the_other_kind_blocks_as_wrong_kind(mode):
     decision = await decide(mode, trust("shown", SERVICE_SEAL), kind="agent")
     assert isinstance(decision, Block)
     assert (decision.passed, decision.code) == (False, "wrong_kind")
+    assert decision.reason == "it holds a Service SEAL, not an Agent SEAL"
 
 
 @pytest.mark.parametrize("mode", MODES)

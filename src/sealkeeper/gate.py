@@ -76,9 +76,11 @@ _REASONS = {
     "delisted": "SealKeeper no longer lists it",
     "unknown": "it holds no SEAL and SealKeeper says nothing more",
     "wrong_url": "the SEAL is for another URL than the one asked for",
-    "wrong_kind": "the SEAL is for the other kind",
     "below_bronze": "its SEAL is below bronze",
 }
+
+# Each kind's SEAL as a reason names it.
+_SEAL_NAMES = {"agent": "an Agent SEAL", "service": "a Service SEAL"}
 
 
 def decide(target: str, kind: str, lookup: Lookup, allow_unsealed: bool) -> Decision:
@@ -94,7 +96,8 @@ def decide(target: str, kind: str, lookup: Lookup, allow_unsealed: bool) -> Deci
             return Block("wrong_url", _REASONS["wrong_url"])
         if seal.kind != kind:
             return Block(
-                "wrong_kind", f"the SEAL is a {seal.kind} SEAL, not a {kind} SEAL"
+                "wrong_kind",
+                f"it holds {_SEAL_NAMES[seal.kind]}, not {_SEAL_NAMES[kind]}",
             )
         if seal.level == "none":
             return Block("below_bronze", _REASONS["below_bronze"])
